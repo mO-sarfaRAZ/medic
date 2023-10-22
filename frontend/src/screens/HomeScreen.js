@@ -1,0 +1,50 @@
+
+import { hideLoading, showLoading } from "../util.js";
+
+const HomeScreen ={
+    render: async () =>{
+        
+        showLoading();
+        const response = await fetch('https://gks-healthcare.onrender.com/api/products',{
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+        hideLoading();
+        if(!response || !response.ok){
+            return `<div>Error in getting data<div>`
+        }
+        const products = await response.json();
+        
+        return `
+        
+
+        <ul class="products">
+        ${products.map(
+            (product)=>
+        
+        `
+        <li>
+            <div class="product" id="${product._id}">
+                <a href="/#/product/${product._id}">
+                    <img src="${product.image}" alt="${product.name}">
+                </a>
+                <div class="product-name">
+                    <a href="/#/product/${product._id}">
+                    ${product.name}
+                    </a>
+                </div>
+                
+                <div class="product-detail">
+                ${product.detail}
+                </div>
+            </div>
+        </li>
+        `
+        ).join('\n')}
+        </ul>
+        `;
+    },
+};
+
+export default HomeScreen;
